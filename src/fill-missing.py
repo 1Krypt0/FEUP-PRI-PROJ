@@ -5,7 +5,7 @@ from newspaper import Article, ArticleException
 df = pd.read_csv('data/spacenews.csv')
 
 # Find out where there is no content
-empty_content = np.asarray( np.where(pd.isnull(df["content"])))[0]
+empty_content = np.asarray(np.where(pd.isnull(df["content"])))[0]
 
 urls = df["url"][empty_content]
 
@@ -21,4 +21,12 @@ for url, index in zip(urls, empty_content):
     df["content"][index] = article.text.replace('\n', ' ')
     print(f"Parsed news item {index}")
 
-df.to_csv('data/spacenews_filled.csv')
+# Remove articles that had no corresponding content online
+df.dropna()
+
+# Drop post excerpt column
+df.drop("postexcerpt", axis=1, inplace=True)
+
+# Use spacy to extract information and keywords
+
+df.to_csv('data/spacenews_refined.csv')
