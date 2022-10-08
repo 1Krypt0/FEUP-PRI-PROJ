@@ -37,7 +37,6 @@ for index, author in zip(authors.index, authors['name']):
     articles = df.index[df['author'] == author].tolist()
     df['author'][articles] = index
 
-
 authors.to_csv('data/authors.csv')
 df.rename(columns = {'author': 'authorID'}, inplace=True)
 df.to_csv('data/spacenews_clean.csv')
