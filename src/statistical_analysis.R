@@ -1,7 +1,7 @@
 # file <- "data/spacenews_filled.csv"
 # data <- read.csv(file)
 
-news_data <- read.csv("data/spacenews_refined2.csv")
+news_data <- read.csv("data/spacenews_clean.csv")
 authors_data <- read.csv("data/authors.csv")
 colnames(authors_data)[1] <- "authorID"
 colnames(news_data)[1] <- "newID"
