@@ -18,7 +18,7 @@ for url, index in zip(urls, empty_content):
     except ArticleException as exception:
         print(f"Could not find article relative to URL {url}. Index was {index}")
         continue
-    df["content"][index] = article.text.replace('\n', ' ')
+    df["content"][index] = article.text
     print(f"Parsed news item {index}")
 
 # Remove articles that had no corresponding content online
@@ -37,7 +37,6 @@ for index, author in zip(authors.index, authors['name']):
     articles = df.index[df['author'] == author].tolist()
     df['author'][articles] = index
 
-
 authors.to_csv('data/authors.csv')
 df.rename(columns = {'author': 'authorID'}, inplace=True)
-df.to_csv('data/spacenews_refined2.csv')
+df.to_csv('data/spacenews_clean.csv')
