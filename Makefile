@@ -2,12 +2,12 @@
 
 path := data
 
-all: 
+all: run_scripts
+
+run_scripts:
 	python3 src/pipeline.py
+	
 
 clean:
-	rm -f ./data/test.csv
 	rm -f ./data/authors.csv
-	rm -f ./data/spacenews_refined.csv
-	rm -f ./data/spacenews_no_authors.csv
-	rm -f ./data/spacenews_refined2.csv
+	rm -f ./data/spacenews_clean.csv
