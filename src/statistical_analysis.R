@@ -1,5 +1,13 @@
-file <- "data/spacenews_filled.csv"
-data <- read.csv(file)
+# file <- "data/spacenews_filled.csv"
+# data <- read.csv(file)
+
+news_data <- read.csv("data/spacenews_refined2.csv")
+authors_data <- read.csv("data/authors.csv")
+colnames(authors_data)[1] <- "authorID"
+colnames(news_data)[1] <- "newID"
+
+data <- merge(news_data, authors_data, by = "authorID")
+colnames(data)[colnames(data) == "name"] <- "author"
 
 # Number of news published each year
 data_publishing_year <- as.numeric(format(
