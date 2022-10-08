@@ -27,6 +27,17 @@ df.dropna()
 # Drop post excerpt column
 df.drop("postexcerpt", axis=1, inplace=True)
 
-# Use spacy to extract information and keywords
+# Remove authors from this dataset and add it into another
+authors = df["author"]
+authors = authors.unique()
+authors = pd.DataFrame(authors)
+authors.columns = ['name']
 
-df.to_csv('data/spacenews_refined.csv')
+for index, author in zip(authors.index, authors['name']):
+    articles = df.index[df['author'] == author].tolist()
+    df['author'][articles] = index
+
+
+authors.to_csv('data/authors.csv')
+df.rename(columns = {'author': 'authorID'}, inplace=True)
+df.to_csv('data/spacenews_refined2.csv')
