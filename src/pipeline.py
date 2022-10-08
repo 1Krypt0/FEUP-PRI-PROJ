@@ -18,7 +18,7 @@ for url, index in zip(urls, empty_content):
     except ArticleException as exception:
         print(f"Could not find article relative to URL {url}. Index was {index}")
         continue
-    df["content"][index] = article.text.replace('\n', ' ')
+    df["content"][index] = article.text
     print(f"Parsed news item {index}")
 
 # Remove articles that had no corresponding content online
