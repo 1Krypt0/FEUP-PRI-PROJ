@@ -40,4 +40,4 @@ for index, author in zip(authors.index, authors['name']):
 
 authors.to_csv('data/authors.csv')
 df.rename(columns = {'author': 'authorID'}, inplace=True)
-df.to_csv('data/spacenews_refined2.csv')
+df.to_csv('data/spacenews_clean.csv')
