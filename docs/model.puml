@@ -1,0 +1,24 @@
+@startuml "Domain Data Model"
+!theme vibrant
+skinparam object {
+    BackgroundColor white
+}
+
+skinparam nodesep 100
+skinparam FileFontName SansSerif
+title Domain Data Model
+
+object Article {
+    title : String
+    url : String
+    content : String
+    date : Date
+}
+
+object Author {
+    name : String
+}
+
+Article "*" - "1" Author
+
+@enduml
