@@ -15,4 +15,4 @@ for index, author in zip(authors.index, authors["name"]):
 news.rename(columns={"author": "authorID"}, inplace=True)
 
 authors.to_csv("data/authors.csv")
-news.to_csv("data/spacenews_final.csv")
+news.to_csv("data/spacenews_separated.csv", index=False)
