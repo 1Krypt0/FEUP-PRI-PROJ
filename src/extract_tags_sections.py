@@ -15,6 +15,9 @@ def extract_tags_sections(url):
 
     container = soup.find("div", attrs={"class": "tax-container"})
 
+    if container is None:
+        return {"tags": [""], "sections": [""]}
+
     for element in container:
 
         # Ignore NavigableStrings (can't be parsed)
@@ -39,9 +42,15 @@ news["tags"] = ""
 news["sections"] = ""
 
 for index, url in zip(news.index, news["url"]):
-    tags_and_sections = extract_tags_sections(url)
-    print("The tags and sections for that article are ", tags_and_sections)
-    news["tags"][index] = tags_and_sections["tags"]
-    news["sections"][index] = tags_and_sections["sections"]
+    try:
+        tags_and_sections = extract_tags_sections(url)
+        print(f"The tags and sections for article {index} are {tags_and_sections}")
+        news["tags"][index] = tags_and_sections["tags"]
+        news["sections"][index] = tags_and_sections["sections"]
+    except Exception as exception:
+        print(f"Exception: {exception}")
+        print("Too many redirects, saving for now")
+        news.to_csv("data/spacenews_final.csv", index=False)
+        continue
 
 news.to_csv("data/spacenews_final.csv")

@@ -1,7 +1,7 @@
 """ Parses the Spacenews website to fill in missing information in the dataset.
 
     Uses the newspaper library to fetch the missing articles from the dataset
-    and fills them in, in the content column. If no article is available, it 
+    and fills them in, in the content column. If no article is available, it
     is skipped. Re-saves the csv file when all is done.
 """
 

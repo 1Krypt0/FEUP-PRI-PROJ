@@ -13,4 +13,3 @@ clean:
 	rm -f data/spacenews_filled.csv
 	rm -f data/spacenews_clean.csv
 	rm -f data/spacenews_separated.csv
-	rm -f data/spacenews_final.csv
