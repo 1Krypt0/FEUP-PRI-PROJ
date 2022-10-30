@@ -1,0 +1,70 @@
+{
+  "add-field-type": [
+    {
+      "name": "articleText",
+      "class": "solr.TextField",
+      "indexAnalyzer": {
+        "tokenizer": { "class": "solr.StandardTokenizerFactory" },
+        "filters": [
+          {
+            "class": "solr.ASCIIFoldingFilterFactory",
+            "preserveOriginal": true
+          },
+          { "class": "solr.LowerCaseFilterFactory" },
+          { "class": "solr.EnglishPossessiveFilterFactory" }
+        ]
+      },
+      "queryAnalyzer": {
+        "tokenizer": { "class": "solr.StandardTokenizerFactory" },
+        "filters": [
+          {
+            "class": "solr.ASCIIFoldingFilterFactory",
+            "preserveOriginal": true
+          },
+          { "class": "solr.LowerCaseFilterFactory" },
+          { "class": "solr.EnglishPossessiveFilterFactory" }
+        ]
+      }
+    },
+    {
+      "name": "articleDate",
+      "class": "solr.DatePointField"
+    }
+  ],
+  "add-field": [
+    {
+      "name": "title",
+      "type": "articleText",
+      "indexed": true
+    },
+    {
+      "name": "url",
+      "type": "",
+      "indexed": false
+    },
+    {
+      "name": "content",
+      "type": "articleText",
+      "indexed": true
+    },
+    {
+      "name": "author",
+      "type": "text_en"
+    },
+    {
+      "name": "date",
+      "type": "",
+      "indexed": false
+    },
+    {
+      "name": "tags",
+      "type": "text_en",
+      "multiValued": true
+    },
+    {
+      "name": "sections",
+      "type": "text_en",
+      "multiValued": true
+    }
+  ]
+}
