@@ -6,11 +6,11 @@ import requests
 import pandas as pd
 
 
-def extract_tags_sections(url):
+def extract_tags_sections(article_url):
     """Function that returns a dict with the tags and sections of the article in the url"""
     tags = []
     sections = []
-    page_html = requests.get(url, timeout=3).content
+    page_html = requests.get(article_url, timeout=3).content
     soup = bs(page_html, "lxml")
 
     container = soup.find("div", attrs={"class": "tax-container"})
