@@ -10,20 +10,20 @@ install_dependencies:
 	pip install newspaper3k
 
 fill_missing:
-	python3 src/fill_missing.py 
+	python3 src/milestone-1/fill_missing.py
 
 clean_data:
-	python3 src/clean_data.py
+	python3 src/milestone-1/clean_data.py
 
 separate_authors:
-	python3 src/separate_authors.py
+	python3 src/milestone-1/separate_authors.py
 
 extract_extra:
-	python3 src/extract_tags_sections.py
+	python3 src/milestone-1/extract_tags_sections.py
 
 # Convert with pretier so that it is properly formatted
 convert_formats:
-	python3 src/convert_formats.py && npx prettier --write data/spacenews.json
+	python3 src/milestone-1/convert_formats.py && npx prettier --write data/spacenews.json
 
 clean:
 	rm -f data/authors.csv
