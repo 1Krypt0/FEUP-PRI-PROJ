@@ -1,4 +1,4 @@
-news_data <- read.csv("data/spacenews_clean.csv")
+news_data <- read.csv("data/spacenews_final.csv")
 authors_data <- read.csv("data/authors.csv")
 tags_data <- read.csv("data/tags.csv")
 sections_data <- read.csv("data/sections.csv")
@@ -6,8 +6,6 @@ sections_data <- read.csv("data/sections.csv")
 # Join the tables
 colnames(authors_data)[1] <- "authorID"
 colnames(news_data)[1] <- "articleID"
-print(head(authors_data, 5))
-print(head(news_data, 5))
 data <- merge(news_data, authors_data, by = "authorID")
 colnames(data)[colnames(data) == "name"] <- "author"
 
@@ -39,3 +37,12 @@ barplot(sort(table(frequent_authors$author), decreasing = TRUE),
 dev.off()
 
 # Frequency of tags
+png(file = "docs/img/plot_tags.png")
+barplot(head(sort(table(tags_data$tag), decreasing = TRUE), 20),
+  las = 2, cex.names = 0.6,
+  main = "Frequency of tags in published articles",
+  col = "lightblue"
+)
+dev.off()
+
+
