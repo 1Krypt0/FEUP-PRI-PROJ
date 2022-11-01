@@ -19,7 +19,9 @@ for articleID, tags in zip(tags_articles["articleID"], tags_articles["tags"]):
     for pt in parsed_tags:
         tags_data.append([articleID, pt])
 
-for articleID, sections in zip(tags_articles["articleID"], sections_articles["sections"]):
+for articleID, sections in zip(
+    tags_articles["articleID"], sections_articles["sections"]
+):
     try:
         parsed_sections = (
             sections.replace("[", "").replace("]", "").replace("'", "").split(",")
@@ -34,5 +36,5 @@ for articleID, sections in zip(tags_articles["articleID"], sections_articles["se
 final_tags = pd.DataFrame(tags_data, columns=["articleID", "tag"])
 final_sections = pd.DataFrame(sections_data, columns=["articleID", "section"])
 
-print(final_tags)
-print(final_sections)
+final_tags.to_csv("data/tags.csv")
+final_sections.to_csv("data/sections.csv")
