@@ -29,11 +29,13 @@ for articleID, sections in zip(
     except AttributeError:
         parsed_sections = []
     for ps in parsed_sections:
-        sections_data.append([articleID, ps])
+        if ps.strip():
+            sections_data.append([articleID, ps.strip()])
 
 final_tags = pd.DataFrame(tags_data, columns=["articleID", "tag"])
 final_tags.dropna(inplace=True)
 final_sections = pd.DataFrame(sections_data, columns=["articleID", "section"])
+final_sections.dropna(inplace=True)
 
 final_tags.to_csv("data/tags.csv")
 final_sections.to_csv("data/sections.csv")

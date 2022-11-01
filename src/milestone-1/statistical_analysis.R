@@ -45,4 +45,14 @@ barplot(head(sort(table(tags_data$tag), decreasing = TRUE), 20),
 )
 dev.off()
 
+# Frequency of sections
+png(file = "docs/img/plot_sections.png")
+# barplot(head(sort(table(sections_data$section), decreasing = TRUE), 20),
+#   las = 2, cex.names = 0.6,
+#   main = "Frequency of sections from published articles",
+#   col = "lightblue"
+# )
+pie(head(sort(table(sections_data$section), decreasing = TRUE), 7), cex = 1)
+dev.off()
+
 
