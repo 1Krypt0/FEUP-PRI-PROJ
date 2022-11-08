@@ -1,6 +1,6 @@
 FROM solr:8.10
 
-COPY spacenews.json /data/spacenews.json
+COPY spacenews_better.json /data/spacenews.json
 
 COPY schema.json /data/schema.json
 
