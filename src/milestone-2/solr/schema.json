@@ -11,7 +11,7 @@
             "preserveOriginal": true
           },
           { "class": "solr.LowerCaseFilterFactory" },
-          { "class": "solr.EnglishPossessiveFilterFactory" }
+          { "class": "solr.EnglishMinimalStemFilterFactory" }
         ]
       },
       "queryAnalyzer": {
@@ -22,7 +22,7 @@
             "preserveOriginal": true
           },
           { "class": "solr.LowerCaseFilterFactory" },
-          { "class": "solr.EnglishPossessiveFilterFactory" }
+          { "class": "solr.EnglishMinimalStemFilterFactory" }
         ]
       }
     },
@@ -39,7 +39,7 @@
     },
     {
       "name": "url",
-      "type": "",
+      "type": "text_en",
       "indexed": false
     },
     {
@@ -49,21 +49,24 @@
     },
     {
       "name": "author",
-      "type": "text_en"
+      "type": "text_en",
+      "indexed": true
     },
     {
       "name": "date",
-      "type": "",
-      "indexed": false
+      "type": "articleDate",
+      "indexed": true
     },
     {
       "name": "tags",
       "type": "text_en",
+      "indexed": true,
       "multiValued": true
     },
     {
       "name": "sections",
       "type": "text_en",
+      "indexed": true,
       "multiValued": true
     }
   ]
