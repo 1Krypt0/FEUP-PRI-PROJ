@@ -19,6 +19,16 @@ object Author {
     name : String
 }
 
+object Tag {
+    name : String
+}
+
+object Section {
+    name : String
+}
+
 Article "*" - "1" Author
+Article "*" -- "*" Tag
+Article "*" -- "*" Section 
 
 @enduml
