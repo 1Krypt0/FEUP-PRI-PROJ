@@ -1,0 +1,4 @@
+Regular Precision=15/18~0.84
+Regular Recall=15/15=1
+Boosted Precision=15/18~0.84
+Boosted Recall=15/15=1

@@ -1,0 +1,4 @@
+Regular Precision=10/11~0.91
+Regular Recall=10/10=1
+Boosted Precision=10/11=1
+Boosted Recall=10/10=1
