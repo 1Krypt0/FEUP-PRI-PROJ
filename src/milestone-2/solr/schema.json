@@ -11,7 +11,8 @@
             "preserveOriginal": true
           },
           { "class": "solr.LowerCaseFilterFactory" },
-          { "class": "solr.EnglishMinimalStemFilterFactory" }
+          { "class": "solr.EnglishMinimalStemFilterFactory" },
+          { "class": "solr.PorterStemFilterFactory" }
         ]
       },
       "queryAnalyzer": {
@@ -22,7 +23,8 @@
             "preserveOriginal": true
           },
           { "class": "solr.LowerCaseFilterFactory" },
-          { "class": "solr.EnglishMinimalStemFilterFactory" }
+          { "class": "solr.EnglishMinimalStemFilterFactory" },
+          { "class": "solr.PorterStemFilterFactory" }
         ]
       }
     },
