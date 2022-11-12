@@ -7,7 +7,7 @@ import requests
 import pandas as pd
 
 QRELS_FILE = "./queries/q1/qrels.txt"
-QUERY_URL = "http://localhost:8983/solr/articles/select?defType=edismax&indent=true&q.op=AND&q=%22SpaceX%20Launch%22&qf=title%20content%20tags%20sections&rows=20&sort=date%20desc"
+QUERY_URL = "http://localhost:8983/solr/articles/select?defType=edismax&indent=true&q.op=AND&q=%22SpaceX%20Launch%22&qf=title%5E10%20content%5E2%20tags%20sections&rows=20&sort=date%20desc"
 
 # Read qrels to extract relevant documents
 relevant = list(map(lambda el: el.strip(), open(QRELS_FILE).readlines()))
