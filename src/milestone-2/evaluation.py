@@ -7,12 +7,14 @@ import requests
 import pandas as pd
 
 QRELS_FILE = "./queries/q3/qrels.txt"
-QUERY_URL = "http://localhost:8983/solr/articles/select?defType=edismax&indent=true&q.op=AND&q=French%20Guiana%20Launch^10&qf=title^10%20content%20tags^5%20sections^5&rows=25"
+QUERY_URL = "http://localhost:8983/solr/articles/select?defType=edismax&fq=date%3A%5B2021-01-01T00%3A00%3A00Z%20TO%202021-12-31T00%3A00%3A00Z%5D&indent=true&q.op=AND&q=Jeff%20Foust&qf=title%20content%20author"
+BOOSTED_QUERY_URL = "http://localhost:8983/solr/articles/select?defType=edismax&fq=date%3A%5B2021-01-01T00%3A00%3A00Z%20TO%202021-12-31T00%3A00%3A00Z%5D&indent=true&q.op=AND&q=Jeff%20Foust&qf=title%20content%20author%5E5"
 
 # Read qrels to extract relevant documents
 relevant = list(map(lambda el: el.strip(), open(QRELS_FILE).readlines()))
 # Get query results from Solr instance
 results = requests.get(QUERY_URL).json()["response"]["docs"]
+boosted_results = requests.get(BOOSTED_QUERY_URL).json()["response"]["docs"]
 
 
 # Define custom decorator to automatically calculate metric based on key
@@ -43,55 +45,76 @@ def calculate_metric(key, results, relevant):
 # Define metrics to be calculated
 evaluation_metrics = {"ap": "Average Precision", "p10": "Precision at 10 (P@10)"}
 
-# Calculate all metrics and export results as LaTeX table
-df = pd.DataFrame(
-    [["Metric", "Value"]]
-    + [
-        [evaluation_metrics[m], calculate_metric(m, results, relevant)]
-        for m in evaluation_metrics
-    ]
-)
 
-with open("results.tex", "w") as tf:
-    tf.write(df.to_latex())
+def calculate_metrics(results, is_boosted):
+    # Calculate all metrics and export results as LaTeX table
+    df = pd.DataFrame(
+        [["Metric", "Value"]]
+        + [
+            [evaluation_metrics[m], calculate_metric(m, results, relevant)]
+            for m in evaluation_metrics
+        ]
+    )
 
-pass
+    name = "results.tex"
+    if is_boosted:
+        name = "results_boosted.tex"
+
+    with open(name, "w") as tf:
+        tf.write(df.to_latex())
 
 
 # PRECISION-RECALL CURVE
 # Calculate precision and recall values as we move down the ranked list
-precision_values = [
-    len([doc for doc in results[:idx] if doc["title"] in relevant]) / idx
-    for idx, _ in enumerate(results, start=1)
-]
+def calculate_pr_curve(results):
+    precision_values = [
+        len([doc for doc in results[:idx] if doc["title"] in relevant]) / idx
+        for idx, _ in enumerate(results, start=1)
+    ]
+    recall_values = [
+        len([doc for doc in results[:idx] if doc["title"] in relevant]) / len(relevant)
+        for idx, _ in enumerate(results, start=1)
+    ]
 
-recall_values = [
-    len([doc for doc in results[:idx] if doc["title"] in relevant]) / len(relevant)
-    for idx, _ in enumerate(results, start=1)
-]
+    precision_recall_match = {k: v for k, v in zip(recall_values, precision_values)}
 
-precision_recall_match = {k: v for k, v in zip(recall_values, precision_values)}
+    # Extend recall_values to include traditional steps for a better curve (0.1, 0.2 ...)
+    recall_values.extend(
+        [step for step in np.arange(0, 1.1, 0.2) if step not in recall_values]
+    )
+    recall_values = sorted(set(recall_values))
 
-# Extend recall_values to include traditional steps for a better curve (0.1, 0.2 ...)
-recall_values.extend(
-    [step for step in np.arange(0.1, 1.1, 0.1) if step not in recall_values]
-)
-recall_values = sorted(set(recall_values))
+    # Extend matching dict to include these new intermediate steps
+    for idx, step in enumerate(recall_values):
+        if step not in precision_recall_match:
+            if idx > 0 and recall_values[idx - 1] in precision_recall_match:
+                precision_recall_match[step] = precision_recall_match[
+                    recall_values[idx - 1]
+                ]
+            else:
+                precision_recall_match[step] = precision_recall_match[
+                    recall_values[idx + 1]
+                ]
+    disp = PrecisionRecallDisplay(
+        [precision_recall_match.get(r) for r in recall_values], recall_values
+    )
 
-# Extend matching dict to include these new intermediate steps
-for idx, step in enumerate(recall_values):
-    if step not in precision_recall_match:
-        if recall_values[idx - 1] in precision_recall_match:
-            precision_recall_match[step] = precision_recall_match[
-                recall_values[idx - 1]
-            ]
-        else:
-            precision_recall_match[step] = precision_recall_match[
-                recall_values[idx + 1]
-            ]
+    return disp
 
-disp = PrecisionRecallDisplay(
-    [precision_recall_match.get(r) for r in recall_values], recall_values
-)
-disp.plot()
+
+calculate_metrics(results, False)
+calculate_metrics(boosted_results, True)
+
+regular = calculate_pr_curve(results)
+boosted = calculate_pr_curve(boosted_results)
+
+
+_, ax = plt.subplots(figsize=(5, 4))
+
+regular.plot(ax=ax, name="Regular", color="cornflowerblue")
+boosted.plot(ax=ax, name="Boosted", color="darkorange")
+
+plt.ylim((0, 1.1))
+
+# disp.plot()
 plt.savefig("precision_recall.pdf")
