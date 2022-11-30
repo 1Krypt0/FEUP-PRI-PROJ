@@ -5,10 +5,10 @@ import numpy as np
 import requests
 
 # Need to change for every request
-QUERY_URL = "http://localhost:8983/solr/articles/select?defType=edismax&fq=date%3A%5B2021-01-01T00%3A00%3A00Z%20TO%202021-12-31T00%3A00%3A00Z%5D&indent=true&q.op=AND&q=Jeff%20Foust&qf=title%20content%20author"
-QUERY_BOOST_URL = "http://localhost:8983/solr/articles/select?defType=edismax&fq=date%3A%5B2021-01-01T00%3A00%3A00Z%20TO%202021-12-31T00%3A00%3A00Z%5D&indent=true&q.op=AND&q=Jeff%20Foust&qf=title%20content%20author%5E5"
+QUERY_URL = "http://localhost:8983/solr/articles/select?defType=edismax&indent=true&q.op=AND&q=Astronaut%20working%20ISS&qf=title%20content%20tags%20sections&rows=25"
+QUERY_BOOST_URL = "http://localhost:8983/solr/articles/select?defType=edismax&indent=true&q.op=AND&q=Astronaut%20working%20ISS&qf=title^10%20content%20tags^5%20sections&rows=25"
 
-QRELS_FILE = "./queries/q2/qrels.txt"
+QRELS_FILE = "./queries/q4/qrels.txt"
 
 _, ax = plt.subplots(figsize=(5, 4))
 
