@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 from sklearn.metrics import PrecisionRecallDisplay
 import numpy as np
+import pandas as pd
 import requests
 
 # Need to change for every request
@@ -9,6 +10,61 @@ QUERY_URL = "http://localhost:8983/solr/articles/select?defType=edismax&fq=date%
 QUERY_BOOST_URL = "http://localhost:8983/solr/articles/select?defType=edismax&fq=date%3A%5B2021-01-01T00%3A00%3A00Z%20TO%202021-12-31T00%3A00%3A00Z%5D&indent=true&q.op=AND&q=Jeff%20Foust&qf=title%20content%20author%5E5&rows=50"
 
 QRELS_FILE = "./queries/q2/qrels.txt"
+
+
+# Read qrels to extract relevant documents
+relevant = list(map(lambda el: el.strip(), open(QRELS_FILE).readlines()))
+# Get query results from Solr instance
+results = requests.get(QUERY_URL).json()["response"]["docs"]
+boosted_results = requests.get(QUERY_BOOST_URL).json()["response"]["docs"]
+
+
+# Define custom decorator to automatically calculate metric based on key
+metrics = {}
+metric = lambda f: metrics.setdefault(f.__name__, f)
+
+
+@metric
+def ap(results, relevant):
+    """Average Precision"""
+    precision_values = [
+        len([doc for doc in results[:idx] if doc["title"] in relevant]) / idx
+        for idx in range(1, len(results))
+    ]
+    return sum(precision_values) / len(precision_values)
+
+
+@metric
+def p10(results, relevant, n=10):
+    """Precision at N"""
+    return len([doc for doc in results[:n] if doc["title"] in relevant]) / n
+
+
+def calculate_metric(key, results, relevant):
+    return metrics[key](results, relevant)
+
+
+# Define metrics to be calculated
+evaluation_metrics = {"ap": "Average Precision", "p10": "Precision at 10 (P@10)"}
+
+
+def calculate_metrics(results, is_boosted):
+    # Calculate all metrics and export results as LaTeX table
+    df = pd.DataFrame(
+        [["Metric", "Value"]]
+        + [
+            [evaluation_metrics[m], calculate_metric(m, results, relevant)]
+            for m in evaluation_metrics
+        ]
+    )
+
+    name = "results.tex"
+    if is_boosted:
+        name = "results_boosted.tex"
+
+    with open(name, "w") as tf:
+        tf.write(df.to_latex())
+
 
 _, ax = plt.subplots(figsize=(5, 4))
 
@@ -101,3 +157,6 @@ disp.plot(ax=ax, name="Boosted", color="darkorange")
 
 plt.ylim((0, 1.1))
 plt.savefig("precision_recall_graph.png")
+
+calculate_metrics(results, False)
+calculate_metrics(boosted_results, True)
