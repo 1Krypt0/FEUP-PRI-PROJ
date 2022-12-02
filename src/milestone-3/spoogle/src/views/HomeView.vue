@@ -1,7 +1,9 @@
 <script setup lang="ts">
-const hello = 0;
+import SearchBox from "../components/SearchBox.vue";
 </script>
 
 <template>
-  <main class="flex items-center justify-center">We are in the home page</main>
+  <main class="flex items-center justify-center">
+    <SearchBox />
+  </main>
 </template>
