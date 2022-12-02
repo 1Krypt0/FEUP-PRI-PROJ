@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import TheWelcome from "../components/TheWelcome.vue";
+const hello = 0;
 </script>
 
 <template>
-  <main></main>
+  <main>We are in the home page</main>
 </template>

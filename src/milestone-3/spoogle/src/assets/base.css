@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#app {
+  height: 100%;
+  width: 100%;
+}
+
+#wrapper {
+  grid-template-rows: auto 1fr auto;
+}
