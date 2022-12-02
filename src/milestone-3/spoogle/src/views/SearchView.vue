@@ -1,5 +1,7 @@
 <script setup></script>
 
 <template>
-  <div></div>
+  <main class="flex items-center justify-center">
+    This is just a test search view
+  </main>
 </template>
