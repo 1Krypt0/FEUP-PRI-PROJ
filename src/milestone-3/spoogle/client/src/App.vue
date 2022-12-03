@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import TheHeader from "./components/TheHeader.vue";
 import TheFooter from "./components/TheFooter.vue";
-import { ref, watch, watchEffect } from "vue";
+import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
