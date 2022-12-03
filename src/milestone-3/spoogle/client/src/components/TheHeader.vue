@@ -4,8 +4,20 @@
       <RouterLink to="/" class="h-4/5">
         <img src="../assets/logo.svg" class="h-full" />
       </RouterLink>
+      <SearchBox :query="query" class="pl-20" />
     </nav>
   </header>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onBeforeMount, ref } from "vue";
+import { useRoute } from "vue-router";
+import SearchBox from "./SearchBox.vue";
+
+const query = ref("");
+
+onBeforeMount(() => {
+  const q = useRoute().query.q as string;
+  if (q) query.value = q;
+});
+</script>
