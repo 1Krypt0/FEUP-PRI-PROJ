@@ -1,5 +1,5 @@
 <template>
-  <form @submit="search(query)">
+  <form @submit.prevent="search(query)">
     <div
       class="flex h-11 border-[1.5px] rounded-full border-solid border-snred shadow-none"
     >
@@ -31,8 +31,8 @@
 </template>
 
 <script setup lang="ts">
-import router from "@/router";
 import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 
 const props = defineProps<{ query: string }>();
 
@@ -44,6 +44,7 @@ onMounted(() => {
   }
 });
 
+const router = useRouter();
 const search = (query: string) => {
   router.push({ name: "search", query: { q: query } });
 };

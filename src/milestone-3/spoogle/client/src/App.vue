@@ -14,6 +14,8 @@ const api = axios.create({
 });
 provide("api", api);
 
+const update = ref(0);
+
 watch(
   () => route.fullPath,
   async (newRoute) => {
@@ -22,6 +24,7 @@ watch(
     } else {
       isHome.value = false;
     }
+    update.value++;
   }
 );
 </script>
@@ -31,7 +34,7 @@ watch(
     <TheHeader v-if="!isHome" />
     <div v-else></div>
 
-    <RouterView />
+    <RouterView :key="update" />
 
     <TheFooter />
   </div>
