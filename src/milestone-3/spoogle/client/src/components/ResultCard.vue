@@ -5,7 +5,7 @@ export interface Article {
   url: string;
   content: string;
   author: string;
-  date: Date;
+  date: string;
   tags: string[];
   sections: string[];
 }

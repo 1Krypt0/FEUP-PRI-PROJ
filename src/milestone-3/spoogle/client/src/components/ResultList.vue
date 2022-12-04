@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ResultCard from "./ResultCard.vue";
 export interface Article {
+  id: string;
   title: string;
   url: string;
   content: string;
@@ -21,14 +22,21 @@ const props = defineProps<Results>();
   <div class="w-full flex flex-col gap-10">
     <ResultCard
       v-for="article of results"
-      :key="article.url"
+      :key="article.id"
+      :id="article.id"
       :title="article.title"
       :url="article.url"
       :content="article.content"
       :author="article.author"
-      :date="article.date"
       :tags="article.tags"
       :sections="article.sections"
+      :date="
+        article.date.toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })
+      "
     />
   </div>
 </template>

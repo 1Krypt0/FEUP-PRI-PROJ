@@ -2,8 +2,10 @@
 import { onBeforeMount, ref } from "vue";
 import { useRoute } from "vue-router";
 import ResultList from "../components/ResultList.vue";
+import FilterBox from "../components/FilterBox.vue";
 
 export interface Article {
+  id: string;
   title: string;
   url: string;
   content: string;
@@ -20,6 +22,7 @@ export interface Results {
 const getItems = (query: string) => {
   results.value = [
     {
+      id: "0",
       title: "Fancy title 0",
       content: "Fancy content of the very lengthy news article 0",
       url: "Url 0",
@@ -29,6 +32,7 @@ const getItems = (query: string) => {
       sections: ["section0", "section1"],
     },
     {
+      id: "1",
       title: "Fancy title 1",
       content: "Fancy content of the very lengthy news article 1",
       url: "Url 1",
@@ -38,6 +42,7 @@ const getItems = (query: string) => {
       sections: ["section0", "section1"],
     },
     {
+      id: "2",
       title: "Fancy title 2",
       content: "Fancy content of the very lengthy news article 2",
       url: "Url 2",
@@ -47,6 +52,7 @@ const getItems = (query: string) => {
       sections: ["section0", "section1"],
     },
     {
+      id: "3",
       title: "Fancy title 3",
       content: "Fancy content of the very lengthy news article 3",
       url: "Url 3",
@@ -60,6 +66,7 @@ const getItems = (query: string) => {
 
 const results = ref([
   {
+    id: "",
     title: "",
     url: "",
     content: "",
@@ -78,8 +85,9 @@ onBeforeMount(() => {
 
 <template>
   <div class="flex pt-20">
-    <section class="flex w-1/5 flex-col items-center">
-      <h2 class="text-xl font-sn">Filters</h2>
+    <section class="flex w-1/5 flex-col px-10">
+      <h2 class="text-3xl font-sn pb-10">Filters</h2>
+      <FilterBox />
     </section>
     <main class="flex w-3/5 justify-center px-10">
       <ResultList :results="results" />
