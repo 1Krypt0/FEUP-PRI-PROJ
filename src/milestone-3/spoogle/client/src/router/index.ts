@@ -22,6 +22,7 @@ const router = createRouter({
       path: "/result/:id",
       name: "result",
       component: ResultView,
+      props: true,
     },
     {
       path: "/:pathMatch(.*)*",
