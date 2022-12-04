@@ -15,13 +15,13 @@ const props = defineProps<Article>();
 
 <template>
   <section class="max-w-full rounded overflow-hidden shadow-lg">
-    <div class="px-6 py-4">
+    <div class="px-6 py-4 max-w-full">
       <div class="font-bold text-xl mb-2">
         <RouterLink :to="{ name: 'result', params: { id: id } }">
           {{ title }}
         </RouterLink>
       </div>
-      <p class="text-gray-700 text-base">
+      <p class="text-gray-700 text-base max-w-[100ch] truncate">
         {{ content }}
       </p>
     </div>
