@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import ResultTagSection from "./ResultTagSection.vue";
 export interface Article {
   id: string;
@@ -11,13 +12,20 @@ export interface Article {
   sections: string[];
 }
 const props = defineProps<Article>();
+const prettyDate = computed(() => {
+  return new Date(props.date).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+});
 </script>
 
 <template>
   <section class="max-w-full rounded overflow-hidden shadow-lg">
     <div class="px-6 py-4 max-w-full">
       <div class="font-bold text-xl mb-2">
-        <RouterLink :to="{ name: 'result', params: { id: id } }">
+        <RouterLink :to="{ name: 'result', params: { id: id ? id : 0 } }">
           {{ title }}
         </RouterLink>
       </div>
@@ -29,7 +37,7 @@ const props = defineProps<Article>();
     <div class="px-6 flex items-center">
       <div class="text-sm">
         <p class="text-gray-900 leading-none">{{ author }}</p>
-        <p class="text-gray-600">{{ date }}</p>
+        <p class="text-gray-600">{{ prettyDate }}</p>
       </div>
     </div>
 

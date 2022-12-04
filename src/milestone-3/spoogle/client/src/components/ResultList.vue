@@ -6,7 +6,7 @@ export interface Article {
   url: string;
   content: string;
   author: string;
-  date: Date;
+  date: string;
   tags: string[];
   sections: string[];
 }
@@ -30,13 +30,7 @@ const props = defineProps<Results>();
       :author="article.author"
       :tags="article.tags"
       :sections="article.sections"
-      :date="
-        article.date.toLocaleDateString(undefined, {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        })
-      "
+      :date="article.date"
     />
   </div>
 </template>
