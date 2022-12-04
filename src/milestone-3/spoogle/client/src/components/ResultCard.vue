@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ResultTagSection from "./ResultTagSection.vue";
 export interface Article {
+  id: string;
   title: string;
   url: string;
   content: string;
@@ -16,7 +17,7 @@ const props = defineProps<Article>();
   <section class="max-w-full rounded overflow-hidden shadow-lg">
     <div class="px-6 py-4">
       <div class="font-bold text-xl mb-2">
-        <RouterLink :to="{ name: 'result', params: { id: title } }">
+        <RouterLink :to="{ name: 'result', params: { id: id } }">
           {{ title }}
         </RouterLink>
       </div>
