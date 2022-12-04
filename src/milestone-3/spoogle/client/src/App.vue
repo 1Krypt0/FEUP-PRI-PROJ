@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import TheHeader from "./components/TheHeader.vue";
 import TheFooter from "./components/TheFooter.vue";
-import { ref, watch } from "vue";
+import { provide, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import axios from "axios";
 
 const route = useRoute();
 const isHome = ref(true);
+
+const api = axios.create({
+  baseURL: "http://localhost:3000",
+  timeout: 2000,
+});
+provide("api", api);
 
 watch(
   () => route.fullPath,
