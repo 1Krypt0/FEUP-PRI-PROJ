@@ -2,6 +2,7 @@
 import { inject, onMounted, ref } from "vue";
 import ResultTagSection from "../components/ResultTagSection.vue";
 import type { AxiosInstance } from "axios";
+import { computed } from "vue";
 export interface Article {
   id: string;
 }
@@ -29,6 +30,13 @@ const article = ref({
   tags: [""],
   sections: [""],
 });
+const prettyDate = computed(() => {
+  return new Date(article.value.date).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+});
 
 // use id to fetch the article before mounting the page
 onMounted(() => getItem(props.id));
@@ -38,7 +46,7 @@ onMounted(() => getItem(props.id));
   <main class="w-2/4 mx-auto flex flex-col">
     <h1 class="text-5xl font-sn font-bold pt-20">{{ article.title }}</h1>
     <section>
-      <p class="pb-3">{{ article.author }} - {{ article.date }}</p>
+      <p class="py-3">{{ article.author }} - {{ prettyDate }}</p>
 
       <ResultTagSection
         v-for="tag of article.tags"
