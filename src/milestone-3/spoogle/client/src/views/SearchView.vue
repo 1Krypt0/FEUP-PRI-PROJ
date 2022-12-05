@@ -22,12 +22,13 @@ export interface Results {
 
 const api = inject("api") as AxiosInstance;
 async function getItems(
-  query: string
+  query: string,
+  page: number
 ): Promise<{ numFound: number; docs: Article[] }> {
   const results = await api.get("/search", {
     params: {
       q: query,
-      page: page.value,
+      page: page,
     },
   });
   return results.data;
@@ -58,9 +59,11 @@ watch(bottom, (newValue) => {
 });
 
 async function getMoreItems(query: string): Promise<void> {
-  page.value++;
-  const newResults = await getItems(query);
-  if (newResults) results.value.push(...newResults.docs);
+  const newResults = await getItems(query, page.value + 1);
+  if (newResults) {
+    results.value.push(...newResults.docs);
+    page.value++;
+  }
 }
 
 onMounted(() => {
@@ -78,7 +81,7 @@ const bottomVisible = () => {
 };
 
 onBeforeMount(async () => {
-  const items = await getItems(query);
+  const items = await getItems(query, 0);
   results.value = items.docs;
   amount.value = items.numFound;
 });
