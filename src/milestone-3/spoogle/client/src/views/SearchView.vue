@@ -4,6 +4,7 @@ import { useRoute } from "vue-router";
 import ResultList from "../components/ResultList.vue";
 import FilterBox from "../components/FilterBox.vue";
 import type { AxiosInstance } from "axios";
+import { computed } from "@vue/reactivity";
 
 export interface Article {
   id: string;
@@ -72,6 +73,10 @@ onMounted(() => {
   });
 });
 
+const total = computed(() => {
+  return amount.value < 8 ? amount.value : (page.value + 1) * 8;
+});
+
 const bottomVisible = () => {
   const scrollY = window.scrollY;
   const visible = document.documentElement.clientHeight;
@@ -94,9 +99,7 @@ onBeforeMount(async () => {
       <FilterBox />
     </section>
     <main class="flex flex-col w-3/5 justify-center px-10">
-      <p class="self-end">
-        Showing {{ (page + 1) * 8 }} of {{ amount }} results
-      </p>
+      <p class="self-end">Showing {{ total }} of {{ amount }} results</p>
       <ResultList :results="results" />
       <section></section>
     </main>
