@@ -9,15 +9,15 @@ const solr = axios.create({
   timeout: 10000,
 });
 
-async function searchSolr(query) {
+async function searchSolr(query, page) {
   const response = await solr.get(BASE_URL, {
     params: {
       defType: "edismax",
       indent: true,
       "q.op": "AND",
-      qf: "title^10 content^5 tags^3 sections^3",
+      qf: "title^10 content^5 tags^3 sections^3 author date id",
       rows: 8,
-      start: 0,
+      start: page * 8,
       q: query,
     },
   });
@@ -25,19 +25,14 @@ async function searchSolr(query) {
   const solrResponse = response.data.response;
 
   if (solrResponse) {
-    return solrResponse.docs;
+    const docs = solrResponse.docs;
+    const numFound = solrResponse.numFound;
+    console.log("Found a total of", numFound);
+    return {
+      docs,
+      numFound,
+    };
   }
-
-  /*.then((response) => {
-      const solrResponse = response.data.response;
-      if (solrResponse) {
-        const docs = solrResponse.docs;
-        return docs;
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    })*/
 }
 
 const app = express();
@@ -45,14 +40,16 @@ app.use(cors());
 
 const port = 3000;
 
-app.get("/article/:id", (req, res) => {
+app.get("/article/:id", async (req, res) => {
   const id = req.params.id;
-  const article = results.find((elem) => elem.id === id);
+  const query = `id:${id}`;
+  const results = await searchSolr(query, 0);
+  const article = results.docs[0];
   res.send(article);
 });
 
 app.get("/search", async (req, res) => {
-  const results = await searchSolr(req.query.q);
+  const results = await searchSolr(req.query.q, req.query.page);
   res.send(results);
 });
 
