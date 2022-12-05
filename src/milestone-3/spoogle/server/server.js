@@ -1,29 +1,27 @@
-const express = require("express");
-const cors = require("cors");
-const axios = require("axios");
+import cors from "cors";
+import express from "express";
 
-const BASE_URL = "http://localhost:8983/solr/articles/select";
-
-const solr = axios.create({
-  baseURL: BASE_URL,
-  timeout: 10000,
-});
+const BASE_URL = "http://localhost:8983/solr/articles/select?";
 
 async function searchSolr(params) {
-  const response = await solr.get(BASE_URL, {
-    params: params,
-  });
+  const url = BASE_URL + new URLSearchParams(params);
+  const fetchResult = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Access-Control-Allow-Methods": "GET",
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Credentials": true,
+    },
+  })
+    .then((result) => result.json())
+    .then((data) => {
+      return {
+        docs: data.response.docs,
+        numFound: data.response.numFound,
+      };
+    });
 
-  const solrResponse = response.data.response;
-
-  if (solrResponse) {
-    const docs = solrResponse.docs;
-    const numFound = solrResponse.numFound;
-    return {
-      docs,
-      numFound,
-    };
-  }
+  return fetchResult;
 }
 
 const app = express();
@@ -52,8 +50,8 @@ app.get("/search", async (req, res) => {
     qf: "title^10 content^5 tags^3 sections^3 author date id",
     wt: "json",
     defType: "edismax",
-    rows: 8,
-    start: req.query.page * 8,
+    rows: 10,
+    start: req.query.page * 10,
   };
   const results = await searchSolr(params);
   res.send(results);
