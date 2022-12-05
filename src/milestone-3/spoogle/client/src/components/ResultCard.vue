@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import ResultTagSection from "./ResultTagSection.vue";
+import MoreLikeThis from "./MoreLikeThis.vue";
 export interface Article {
   id: string;
   title: string;
@@ -53,6 +54,9 @@ const prettyDate = computed(() => {
         :key="section"
         :content="section"
         :is-tag="false"
+      />
+      <MoreLikeThis
+        :id="id"
       />
     </div>
   </section>
