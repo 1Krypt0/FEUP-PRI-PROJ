@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { inject, onBeforeMount, onMounted, ref, watch } from "vue";
+import { inject, onBeforeMount, onMounted, ref, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import ResultList from "../components/ResultList.vue";
 import FilterBox from "../components/FilterBox.vue";
 import type { AxiosInstance } from "axios";
-import { computed } from "@vue/reactivity";
 
 export interface Article {
   id: string;
@@ -74,7 +73,11 @@ onMounted(() => {
 });
 
 const total = computed(() => {
-  return amount.value < 8 ? amount.value : (page.value + 1) * 8;
+  return amount.value < 10
+    ? amount.value
+    : (page.value + 1) * 10 > amount.value
+    ? amount.value
+    : (page.value + 1) * 10;
 });
 
 const bottomVisible = () => {
