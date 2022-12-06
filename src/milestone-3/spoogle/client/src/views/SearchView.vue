@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject, onBeforeMount, onMounted, ref, watch } from "vue";
+import { inject, onBeforeMount, onMounted, ref, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import ResultList from "../components/ResultList.vue";
 import FilterBox from "../components/FilterBox.vue";
@@ -22,12 +22,13 @@ export interface Results {
 
 const api = inject("api") as AxiosInstance;
 async function getItems(
-  query: string
+  query: string,
+  page: number
 ): Promise<{ numFound: number; docs: Article[] }> {
   const results = await api.get("/search", {
     params: {
       q: query,
-      page: page.value,
+      page: page,
     },
   });
   return results.data;
@@ -58,15 +59,25 @@ watch(bottom, (newValue) => {
 });
 
 async function getMoreItems(query: string): Promise<void> {
-  page.value++;
-  const newResults = await getItems(query);
-  if (newResults) results.value.push(...newResults.docs);
+  const newResults = await getItems(query, page.value + 1);
+  if (newResults) {
+    results.value.push(...newResults.docs);
+    page.value++;
+  }
 }
 
 onMounted(() => {
   window.addEventListener("scroll", () => {
     bottom.value = bottomVisible();
   });
+});
+
+const total = computed(() => {
+  return amount.value < 10
+    ? amount.value
+    : (page.value + 1) * 10 > amount.value
+    ? amount.value
+    : (page.value + 1) * 10;
 });
 
 const bottomVisible = () => {
@@ -78,7 +89,7 @@ const bottomVisible = () => {
 };
 
 onBeforeMount(async () => {
-  const items = await getItems(query);
+  const items = await getItems(query, 0);
   results.value = items.docs;
   amount.value = items.numFound;
 });
@@ -91,9 +102,7 @@ onBeforeMount(async () => {
       <FilterBox />
     </section>
     <main class="flex flex-col w-3/5 justify-center px-10">
-      <p class="self-end">
-        Showing {{ (page + 1) * 8 }} of {{ amount }} results
-      </p>
+      <p class="self-end">Showing {{ total }} of {{ amount }} results</p>
       <ResultList :results="results" />
       <section></section>
     </main>
