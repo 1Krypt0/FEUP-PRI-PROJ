@@ -1,13 +1,8 @@
 <template>
-  <div class="inline-block bg-slate-500 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2 mb-2">
-    <!-- <router-link to="/mlt" custom v-slot="{ navigate }"> -->
-    <!--   <button @click="navigate" role="link"> -->
-    <!--     More Like This {{ id }} -->
-    <!--   </button> -->
-    <!-- </router-link> -->
+  <div class="">
     <form @submit.prevent="getMoreLikeThis">
-      <button role="link">
-        More Like This {{ id }}
+      <button class="text-sm underline underline-offset-2 text-slate-600" role="link">
+        More like this
       </button>
     </form>
   </div>

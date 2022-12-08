@@ -42,22 +42,12 @@ const prettyDate = computed(() => {
       </div>
     </div>
 
-    <div class="px-6 pt-4 pb-2">
-      <ResultTagSection
-        v-for="tag of tags"
-        :key="tag"
-        :content="tag"
-        :is-tag="true"
-      />
-      <ResultTagSection
-        v-for="section of sections"
-        :key="section"
-        :content="section"
-        :is-tag="false"
-      />
-      <MoreLikeThis
-        :id="id"
-      />
+    <div class="flex px-6 pt-4 pb-2 justify-between">
+      <div>
+        <ResultTagSection v-for="tag of tags" :key="tag" :content="tag" :is-tag="true" />
+        <ResultTagSection v-for="section of sections" :key="section" :content="section" :is-tag="false" />
+      </div>
+      <MoreLikeThis :id="id" />
     </div>
   </section>
 </template>
