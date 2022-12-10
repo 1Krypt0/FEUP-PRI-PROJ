@@ -102,6 +102,5 @@ onBeforeMount(async () => {
       <ResultList :results="results" />
       <section></section>
     </main>
-    <section class="flex w-1/5 flex-col"></section>
   </div>
 </template>
