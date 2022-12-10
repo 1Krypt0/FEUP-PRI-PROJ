@@ -39,7 +39,7 @@ app.get("/article/:id", async (req, res) => {
     wt: "json",
     q: query,
   };
-  const results = await searchSolr(params);
+  const results = await fetchSolr(BASE_URL, params);
   const article = results.docs[0];
   res.send(article);
 });
@@ -63,11 +63,11 @@ app.get("/mlt", async (req, res) => {
     defType: "edismax",
     indent: "true",
     "q.op": "OR",
-    q: "id=" + req.query.id,
+    q: "id:" + req.query.id,
     qf: "title^10 content^5 tags^3 sections^3 author date id",
     rows: 10,
-    start: req.query.page * 10
-  }
+    start: req.query.page * 10,
+  };
   const results = await fetchSolr(MLT_BASE_URL, params);
   res.send(results);
 });
