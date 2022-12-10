@@ -2,7 +2,6 @@
 import { inject, onBeforeMount, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import ResultList from "../components/ResultList.vue";
-import FilterBox from "../components/FilterBox.vue";
 import type { AxiosInstance } from "axios";
 
 export interface Article {
@@ -77,8 +76,8 @@ const bottomVisible = () => {
   return bottomOfPage || pageHeight < visible;
 };
 
-const route = useRoute()
-const id = route.query.id as string
+const route = useRoute();
+const id = route.query.id as string;
 onBeforeMount(async () => {
   const items = await getItems(id);
   results.value = items.docs;
@@ -88,10 +87,7 @@ onBeforeMount(async () => {
 
 <template>
   <div class="flex pt-20">
-    <section class="flex w-1/5 flex-col px-10">
-      <h2 class="text-3xl font-sn pb-10">Filters</h2>
-      <FilterBox />
-    </section>
+    <section class="flex w-1/5 flex-col px-10"></section>
     <main class="flex flex-col w-3/5 justify-center px-10">
       <p class="self-end">
         Showing {{ (page + 1) * 8 }} of {{ amount }} results
