@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject, onBeforeMount, onMounted, ref, watch } from "vue";
+import { inject, computed, onBeforeMount, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import ResultList from "../components/ResultList.vue";
 import type { AxiosInstance } from "axios";
@@ -18,6 +18,14 @@ export interface Article {
 export interface Results {
   results: Article[];
 }
+
+const total = computed(() => {
+  return amount.value < 10
+    ? amount.value
+    : (page.value + 1) * 10 > amount.value
+    ? amount.value
+    : (page.value + 1) * 10;
+});
 
 const api = inject("api") as AxiosInstance;
 async function getItems(
@@ -89,9 +97,7 @@ onBeforeMount(async () => {
   <div class="flex pt-20">
     <section class="flex w-1/5 flex-col px-10"></section>
     <main class="flex flex-col w-3/5 justify-center px-10">
-      <p class="self-end">
-        Showing {{ (page + 1) * 8 }} of {{ amount }} results
-      </p>
+      <p class="self-end">Showing {{ total }} of {{ amount }} results</p>
       <ResultList :results="results" />
       <section></section>
     </main>
