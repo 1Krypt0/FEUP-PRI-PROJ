@@ -48,7 +48,7 @@ app.get("/search", async (req, res) => {
   const params = {
     q: req.query.q,
     "q.op": "AND",
-    qf: "title content author",
+    qf: "title^10 content^5 tags^3 sections^3 author",
     wt: "json",
     defType: "edismax",
     rows: 10,
