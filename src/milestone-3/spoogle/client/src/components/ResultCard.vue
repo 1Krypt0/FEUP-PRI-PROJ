@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import ResultTagSection from "./ResultTagSection.vue";
+import MoreLikeThis from "./MoreLikeThis.vue";
 export interface Article {
   id: string;
   title: string;
@@ -41,19 +42,12 @@ const prettyDate = computed(() => {
       </div>
     </div>
 
-    <div class="px-6 pt-4 pb-2">
-      <ResultTagSection
-        v-for="tag of tags"
-        :key="tag"
-        :content="tag"
-        :is-tag="true"
-      />
-      <ResultTagSection
-        v-for="section of sections"
-        :key="section"
-        :content="section"
-        :is-tag="false"
-      />
+    <div class="flex px-6 pt-4 pb-2 justify-between">
+      <div>
+        <ResultTagSection v-for="tag of tags" :key="tag" :content="tag" :is-tag="true" />
+        <ResultTagSection v-for="section of sections" :key="section" :content="section" :is-tag="false" />
+      </div>
+      <MoreLikeThis :id="id" />
     </div>
   </section>
 </template>

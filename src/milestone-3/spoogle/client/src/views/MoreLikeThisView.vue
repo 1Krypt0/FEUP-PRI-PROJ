@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject, onBeforeMount, onMounted, ref, watch, computed } from "vue";
+import { inject, computed, onBeforeMount, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import ResultList from "../components/ResultList.vue";
 import type { AxiosInstance } from "axios";
@@ -19,15 +19,22 @@ export interface Results {
   results: Article[];
 }
 
+const total = computed(() => {
+  return amount.value < 10
+    ? amount.value
+    : (page.value + 1) * 10 > amount.value
+    ? amount.value
+    : (page.value + 1) * 10;
+});
+
 const api = inject("api") as AxiosInstance;
 async function getItems(
-  query: string,
-  page: number
+  id: string
 ): Promise<{ numFound: number; docs: Article[] }> {
-  const results = await api.get("/search", {
+  const results = await api.get("/mlt", {
     params: {
-      q: query,
-      page: page,
+      id: id,
+      page: page.value,
     },
   });
   return results.data;
@@ -58,25 +65,15 @@ watch(bottom, (newValue) => {
 });
 
 async function getMoreItems(query: string): Promise<void> {
-  const newResults = await getItems(query, page.value + 1);
-  if (newResults) {
-    results.value.push(...newResults.docs);
-    page.value++;
-  }
+  page.value++;
+  const newResults = await getItems(id);
+  if (newResults) results.value.push(...newResults.docs);
 }
 
 onMounted(() => {
   window.addEventListener("scroll", () => {
     bottom.value = bottomVisible();
   });
-});
-
-const total = computed(() => {
-  return amount.value < 10
-    ? amount.value
-    : (page.value + 1) * 10 > amount.value
-    ? amount.value
-    : (page.value + 1) * 10;
 });
 
 const bottomVisible = () => {
@@ -87,8 +84,10 @@ const bottomVisible = () => {
   return bottomOfPage || pageHeight < visible;
 };
 
+const route = useRoute();
+const id = route.query.id as string;
 onBeforeMount(async () => {
-  const items = await getItems(query, 0);
+  const items = await getItems(id);
   results.value = items.docs;
   amount.value = items.numFound;
 });
@@ -102,5 +101,6 @@ onBeforeMount(async () => {
       <ResultList :results="results" />
       <section></section>
     </main>
+    <section class="flex w-1/5 flex-col"></section>
   </div>
 </template>

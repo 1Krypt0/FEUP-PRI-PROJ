@@ -2,9 +2,10 @@ import cors from "cors";
 import express from "express";
 
 const BASE_URL = "http://localhost:8983/solr/articles/select?";
+const MLT_BASE_URL = "http://localhost:8983/solr/articles/mlt?";
 
-async function searchSolr(params) {
-  const url = BASE_URL + new URLSearchParams(params);
+async function fetchSolr(baseUrl, params) {
+  const url = baseUrl + new URLSearchParams(params);
   const fetchResult = await fetch(url, {
     method: "GET",
     headers: {
@@ -38,7 +39,7 @@ app.get("/article/:id", async (req, res) => {
     wt: "json",
     q: query,
   };
-  const results = await searchSolr(params);
+  const results = await fetchSolr(BASE_URL, params);
   const article = results.docs[0];
   res.send(article);
 });
@@ -47,13 +48,27 @@ app.get("/search", async (req, res) => {
   const params = {
     q: req.query.q,
     "q.op": "AND",
-    qf: "title^10 content^5 tags^3 sections^3 author date id",
+    qf: "title^10 content^5 tags^3 sections^3 author",
     wt: "json",
     defType: "edismax",
     rows: 10,
     start: req.query.page * 10,
   };
-  const results = await searchSolr(params);
+  const results = await fetchSolr(BASE_URL, params);
+  res.send(results);
+});
+
+app.get("/mlt", async (req, res) => {
+  const params = {
+    defType: "edismax",
+    wt: "json",
+    "q.op": "OR",
+    q: "id:" + req.query.id,
+    qf: "title^10 content^5 tags^3 sections^3 author date id",
+    rows: 10,
+    start: req.query.page * 10,
+  };
+  const results = await fetchSolr(MLT_BASE_URL, params);
   res.send(results);
 });
 
