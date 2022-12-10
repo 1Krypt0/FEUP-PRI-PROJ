@@ -7,6 +7,9 @@ module.exports = {
         snred: "#ee1c25",
         snblack: "#303030",
       },
+      fontFamily: {
+        sn: ["Teko", "sans-serif"],
+      },
     },
   },
   plugins: [],
