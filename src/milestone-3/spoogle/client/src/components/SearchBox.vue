@@ -1,8 +1,5 @@
-<script setup lang="ts"></script>
-
 <template>
-  <section class="flex flex-col justify-evenly pb-32 w-1/4 h-3/4">
-    <img src="../assets/logo.svg" class="w-" />
+  <form @submit.prevent="search(query)">
     <div
       class="flex h-11 border-[1.5px] rounded-full border-solid border-snred shadow-none"
     >
@@ -23,11 +20,32 @@
         <div class="flex flex-1 flex-wrap">
           <input
             type="text"
-            placeholder="Enter your query here"
+            placeholder="To infinity, and beyond!"
             class="bg-transparent border-0 mb-1 p-0 w-full focus:outline-none"
+            v-model="query"
           />
         </div>
       </div>
     </div>
-  </section>
+  </form>
 </template>
+
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+
+const props = defineProps<{ query: string }>();
+
+const query = ref("");
+
+onMounted(() => {
+  if (props.query) {
+    query.value = props.query;
+  }
+});
+
+const router = useRouter();
+const search = (query: string) => {
+  router.push({ name: "search", query: { q: query } });
+};
+</script>
