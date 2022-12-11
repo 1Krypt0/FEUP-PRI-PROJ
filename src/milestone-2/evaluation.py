@@ -6,9 +6,10 @@ import json
 import requests
 import pandas as pd
 
-QRELS_FILE = "./queries/q1/qrels.txt"
-QUERY_URL = "http://localhost:8983/solr/articles/select?defType=edismax&indent=true&q.op=OR&q=alien%20planets&qf=title%20content&rows=20"
-BOOSTED_QUERY_URL = "http://localhost:8983/solr/articles/select?defType=edismax&indent=true&q.op=OR&q=alien%20planets&qf=title%5E3%20content&rows=20"
+QRELS_FILE = "./queries/q3/qrels_mlt.txt"
+QUERY_URL = "http://localhost:8983/solr/articles/select?q=French%20Guiana%20Launch&q.op=AND&qf=title%5E10%20content%5E5%20tags%5E3%20sections%5E3%20author&wt=json&defType=edismax&rows=50"
+BOOSTED_QUERY_URL = "http://localhost:8983/solr/articles/mlt?defType=edismax&wt=json&q.op=OR&q=id%3Ae7c45e8d-3ea4-4a0b-a1ae-b52a1b78f7e3&qf=title%5E10%20content%5E5%20tags%5E3%20sections%5E3%20author%20date%20id&rows=20"
+
 
 # Read qrels to extract relevant documents
 relevant = list(map(lambda el: el.strip(), open(QRELS_FILE).readlines()))
@@ -56,9 +57,9 @@ def calculate_metrics(results, is_boosted):
         ]
     )
 
-    name = "results.tex"
+    name = "results1.tex"
     if is_boosted:
-        name = "results_boosted.tex"
+        name = "results1_boosted.tex"
 
     with open(name, "w") as tf:
         tf.write(df.to_latex())
@@ -117,4 +118,4 @@ boosted.plot(ax=ax, name="Boosted", color="darkorange")
 plt.ylim((0, 1.1))
 
 # disp.plot()
-plt.savefig("precision_recall.pdf")
+plt.savefig("precision_recall1.pdf")
