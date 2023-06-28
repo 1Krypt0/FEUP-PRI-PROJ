@@ -7,7 +7,6 @@ import pandas as pd
 news = pd.read_csv("data/spacenews_final.csv")
 authors = pd.read_csv("data/authors.csv")
 
-print(news.columns)
 news.drop("Unnamed: 0", axis=1, inplace=True)
 
 for tags, sections, index in zip(news["tags"], news["sections"], news.index):

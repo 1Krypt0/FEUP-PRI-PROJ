@@ -19,8 +19,6 @@ def extract_tags_sections(article_url):
         return {"tags": [""], "sections": [""]}
 
     for element in container:
-
-        # Ignore NavigableStrings (can't be parsed)
         if isinstance(element, NavigableString):
             continue
 
